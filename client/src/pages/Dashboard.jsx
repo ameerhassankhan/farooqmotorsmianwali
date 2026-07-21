@@ -1,6 +1,5 @@
 import React from 'react'
-import { testConnection } from '../../services/authService';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import api from '../../config/axios';
 
 const Dashboard = () => {
@@ -11,8 +10,9 @@ const Dashboard = () => {
       <h1 className='text-2xl font-bold'>Dashboard</h1>
         <p>Welcome to the dashboard page!</p>
 
+        <Link to="/signup" className='bg-blue-500 text-white p-2 m-2 rounded cursor-pointer hover:bg-blue-600'>Sign Up</Link>
+        <Link to="/signin" className='bg-blue-500 text-white p-2 m-2 rounded cursor-pointer hover:bg-blue-600'>Sign In</Link>
       
-
         
     </div>
   )

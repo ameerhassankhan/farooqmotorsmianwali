@@ -1,8 +1,8 @@
 import "./App.css";
 import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import Home from './pages/Home';
 import {
 
   createBrowserRouter,
@@ -29,7 +29,13 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+    <div className="h-screen w-auto p-3 bg-zinc-600">
+    <RouterProvider router={router} />
+    </div>
+    </>
+  );
 }
 
 export default App;

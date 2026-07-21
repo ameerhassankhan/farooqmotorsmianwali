@@ -4,7 +4,9 @@ import connectDB from "./config/db.js";
 import cors from "cors";
 import dotenv from "dotenv";
 import User from "./models/User.js";
-// import { Navigate } from 'react-router-dom';
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import { isAuthenticated } from "./middlewares/isAuthenticated.js";
   
 
 const app = express();
@@ -32,20 +34,37 @@ app.get("/api", (req, res) => {
 }); 
 
 app.post("/api/signup", (req, res) => {
-  const { username, email, password } = req.body;
-  User.create({
-    username,
-    email,
-    password
-  })
-  .then((user) => {
+  const { firstname, lastname, email, password } = req.body;
+  console.log("Signup request received:", { firstname, lastname, email });
+  if (User.findOne({ email: email })) {
+    return res.status(400).json({ message: "Email is already registered, try another." });
+  }
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) {
+      console.error("Error generating salt:", err);
+      return res.status(500).json({ message: "Signup failed" });
+    }
+    bcrypt.hash(password, salt, (err, hashedPassword) => {
+      if (err) {
+        console.error("Error hashing password:", err);
+        return res.status(500).json({ message: "Signup failed" });
+      }
+      User.create({
+        firstname,
+        lastname,
+        email,
+        password: hashedPassword
+      }).then((user) => {
     console.log("User created:", user);
+    const token = jwt.sign({email: user.email}, process.env.JWT_SECRET, {expiresIn: '1h'});
+    res.cookie('token', token);
     res.status(201).json({ success:true, message: "Signup successful",  redirectTo: "/home" });
   })
   .catch((error) => {
     console.error("Error creating user:", error);
     res.status(500).json({ message: "Signup failed" });
   });
+});});
 });
 
 app.post("/api/signin", (req, res) => {
@@ -57,12 +76,42 @@ app.post("/api/signin", (req, res) => {
       }
       // Here you would typically compare the provided password with the hashed password
       // For now, we'll assume the password is correct
-      res.json({ success: true, message: "Signin successful", redirectTo: "/home" });
+      const comparePassword = bcrypt.compare(password, user.password, (err, isMatch) => {
+        if (err) {
+          console.error("Error comparing passwords:", err);
+          return res.status(500).json({ message: "Signin failed" });
+        }
+        if (!isMatch) {
+          return res.status(401).json({ message: "Invalid credentials" });
+        }
+        const token = jwt.sign({email: user.email}, process.env.JWT_SECRET, {expiresIn: '1h'});
+        res.cookie('token', token);
+        res.json({ success: true, message: "Signin successful", redirectTo: "/home" });
+   
+      });
     })
     .catch((error) => {
       console.error("Error finding user:", error);
       res.status(500).json({ message: "Signin failed" });
     });
+});
+
+app.get("/api/home", isAuthenticated, (req, res) => {
+    res.json({
+        success: true,
+        user: req.user,
+    });
+}); 
+
+app.post("/api/logout", (req, res) => {
+
+    res.clearCookie("token");
+
+    res.json({
+        success: true,
+        message: "Logout Successful",
+    });
+
 });
 
 app.listen(process.env.PORT, () => {

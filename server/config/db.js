@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-
+import config from 'config';
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect("mongodb://localhost:27017/farooqmotorsmianwali", {
+    const conn = await mongoose.connect(`${config.get("MONGO_URI")}/farooqmotorsmianwali`, {
 
     });
     console.log(`MongoDB Connected: ${conn.connection.host}`);
