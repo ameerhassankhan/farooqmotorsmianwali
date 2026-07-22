@@ -1,33 +1,34 @@
 import React, { use, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import api from '../../config/axios';
+import NavBar from '../components/NavBar';
+import SideMenu from '../components/SideMenu';
 const Home = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-useEffect(() => {
+// useEffect(() => {
 
-    const fetchUser = async () => {
+//     const fetchUser = async () => {
 
-        try{
+//         try{
 
-            const res = await api.get("/home");
+//             const res = await api.get("/home");
 
-            setUser(res.data.user);
+//             setUser(res.data.user);
 
-        }
+//         }
 
-        catch(err){
+//         catch(err){
+//             navigate("/login");
 
-            navigate("/login");
+//         }
 
-        }
+//     };
 
-    };
+//     fetchUser();
 
-    fetchUser();
-
-},[]);
+// },[]);
 
 const handleLogout = async () => {
     try {
@@ -41,21 +42,24 @@ const handleLogout = async () => {
         }
 
     } catch(err){
-
         console.log(err);
 
     }
 };
   return (
-    <div>
-      <h1 className='text-center text-red-800 text-5xl'>Welcome Admin </h1>
-      {user && (
-        <div>
-          <p>Welcome, {user.email}!</p>
-        </div>
-      )}
-      <button onClick={handleLogout} className='bg-blue-500 text-white p-2 m-2 rounded cursor-pointer hover:bg-blue-600'>Logout</button>
-    </div>
+<div className="grid grid-cols-5 h-screen">
+
+    
+      <SideMenu className="col-span-1 bg-slate-900 text-white p-6"/>
+      <div className='col-span-4 bg-zinc-200'>
+      <NavBar className=" shadow-sm shadow-zinc-500"/>
+      <div className='container p-6'>
+        <Outlet />
+      </div>
+      </div>
+
+
+</div>
   )
 }
 
