@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, Pencil, Trash2, Users, AlertTriangle, Loader2 } from "lucide-react";
 
 const TYPE_STYLES = {
@@ -20,6 +21,8 @@ function TypeBadge({ type }) {
 }
 
 function CustomerRow({ customer, index, onDeleteRequest, onEditRequest }) {
+  const navigate = useNavigate();
+
   return (
     <tr
       className={`transition hover:bg-blue-50 ${
@@ -58,6 +61,7 @@ function CustomerRow({ customer, index, onDeleteRequest, onEditRequest }) {
             type="button"
             aria-label={`View ${customer.fullname}`}
             title="View"
+            onClick={() => navigate(`/home/customer/${customer._id}/details`)}
             className="rounded-lg p-2 text-blue-600 transition hover:bg-blue-100"
           >
             <Eye size={18} />

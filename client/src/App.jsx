@@ -18,6 +18,7 @@ import RevenueExp from "./pages/RevenueExp";
 import Settings from './pages/Settings';
 import Inventory from "./pages/Inventory";
 import Sales from "./pages/Sales";
+import CustomerDetail from "./pages/CustomerDetail";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,6 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <SignUp />,
   },
-
   // Layout
   {
     path: "/home",
@@ -41,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "customer",
         element: <Customer />,
+      },
+      {
+        path: "customer/:id/details",
+        element: <CustomerDetail />,
       },
       {
         path: "inventory",

@@ -7,29 +7,6 @@ const Home = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-// useEffect(() => {
-
-//     const fetchUser = async () => {
-
-//         try{
-
-//             const res = await api.get("/home");
-
-//             setUser(res.data.user);
-
-//         }
-
-//         catch(err){
-//             navigate("/login");
-
-//         }
-
-//     };
-
-//     fetchUser();
-
-// },[]);
-
 const handleLogout = async () => {
     try {
 

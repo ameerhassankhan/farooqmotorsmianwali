@@ -5,7 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import { isAuthenticated } from "./middlewares/isAuthenticated.js";
-import { addCustomer, deleteCustomer, fetchCustomers, updateCustomer } from "./controllers/customerController.js";
+import { addCustomer, deleteCustomer, fetchCustomers, getCustomerById, updateCustomer } from "./controllers/customerController.js";
 import { logOut, signIn, signUp } from "./controllers/authController.js";
 
 const app = express();
@@ -30,7 +30,7 @@ app.post("/api/customers/addcustomer",addCustomer)
 app.get("/api/customers/", fetchCustomers)
 app.delete("/api/customers/delete/:id", deleteCustomer)
 app.put("/api/customers/edit/:id", updateCustomer);
-
+app.get("/api/customers/view/:id", getCustomerById);
 
 app.get("/api/home", isAuthenticated, (req, res) => {
     res.json({ success: true, user: req.user });
